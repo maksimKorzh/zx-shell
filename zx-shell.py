@@ -12,8 +12,6 @@ class ZXShell(Cmd):
     prompt = '>>> '
     lines=[]
     lexer=Python3Lexer()
-    BOLD = '\033[1m'
-    END = '\033[0m'
 
     def do_quit(self, line):
         '''Exit the shell'''
@@ -26,8 +24,8 @@ class ZXShell(Cmd):
         for index in range(len(self.lines)):
             print('%03d'%(index + 1),
                    highlight(self.lines[index],
-                   self.lexer,
-                   Terminal256Formatter()),
+                             self.lexer,
+                             Terminal256Formatter()),
                    end='')
     
     def do_insert(self, line):
