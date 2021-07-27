@@ -31,7 +31,7 @@ class ZXShell(Cmd):
     def do_insert(self, line):
         '''Insert line at given index, e.g. "insert 10 some code"'''
         if len(self.lines): self.lines.pop()
-        self.lines.insert(int(line.split()[0])-1, ''.join(line.split()[1:]))
+        self.lines.insert(int(line.split()[0])-1, ' '.join(line.split()[1:]))
     
     def do_exec(self, line):
         '''Run OS command, e.g. "python3 test.py"'''
