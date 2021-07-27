@@ -1,11 +1,19 @@
 from cmd import Cmd
 import sys
 import os
+from pygments import highlight
+from pygments.lexers import Python3Lexer
+from pygments.formatters import Terminal256Formatter
+from pygments.lexers import get_lexer_for_filename
+from pygments.styles import get_style_by_name
 
 class ZXShell(Cmd):
-    intro  = "         Retro shell by CMK\n    Type 'help' to list commands\n"
+    intro  = "    Retro style shell inspired by ZX Spectrum\n          Type 'help' to list commands\n"
     prompt = '>>> '
     lines=[]
+    lexer=Python3Lexer()
+    BOLD = '\033[1m'
+    END = '\033[0m'
 
     def do_quit(self, line):
         '''Exit the shell'''
@@ -14,9 +22,13 @@ class ZXShell(Cmd):
     
     def do_list(self, line):
         '''List source code'''
-        self.do_clear('')
+        if len(self.lines): self.lines.pop()
         for index in range(len(self.lines)):
-            print('%03d'%(index + 1), self.lines[index])
+            print('%03d'%(index + 1),
+                   highlight(self.lines[index],
+                   self.lexer,
+                   Terminal256Formatter()),
+                   end='')
     
     def do_insert(self, line):
         '''Insert line at given index, e.g. "insert 10 some code"'''
@@ -54,6 +66,7 @@ class ZXShell(Cmd):
         if len(self.lines): self.lines.pop()
         try:
             with open(line.split()[0]) as f: self.lines = f.read().split('\n')
+            self.lexer = get_lexer_for_filename(line.split()[0])
             print('File "' + line.split()[0] + '" has been successfully loaded!')
             
         except:
@@ -78,9 +91,13 @@ class ZXShell(Cmd):
             print('Usage: delete 3 [would delete line 3 (if exists)')
             
     def precmd(self, line):
-        self.lines.append(line)
+        if not len(line.split()): self.lines.append('')
+        elif line.split()[0] != 'help': self.lines.append(line)
         return line
     
+    def emptyline(self):
+        pass
+        
     def default(self, line):
         pass
     
