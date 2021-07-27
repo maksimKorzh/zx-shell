@@ -38,7 +38,6 @@ class ZXShell(Cmd):
     def do_exec(self, line):
         '''Run OS command, e.g. "python3 test.py"'''
         if len(self.lines): self.lines.pop()
-        os.system('clear')
         os.system(line)
     
     def do_clear(self, line):
